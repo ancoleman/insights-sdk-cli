@@ -165,7 +165,7 @@ docker-compose.override.yml
 .docker/
 
 # Project specific
-CLAUDE.md
+# CLAUDE.md  # Intentionally tracked - share with team per best practices
 GEMINI.md
 test_files/
 configs/maturity_checks.yaml
