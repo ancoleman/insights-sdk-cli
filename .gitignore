@@ -160,7 +160,6 @@ $RECYCLE.BIN/
 *.lnk
 
 # Docker
-.dockerignore
 docker-compose.override.yml
 .docker/
 
