@@ -64,3 +64,6 @@ warn_unused_configs = true
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+markers = [
+    "slow: marks tests as slow (requires Docker, deselect with '-m \"not slow\"')",
+]

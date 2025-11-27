@@ -6,6 +6,7 @@ and respx for mocking HTTP requests.
 """
 
 import json
+import re
 import pytest
 import httpx
 import respx
@@ -26,6 +27,15 @@ runner = CliRunner()
 # ═══════════════════════════════════════════════════════════════════
 # Helper Functions
 # ═══════════════════════════════════════════════════════════════════
+
+# Regex to strip ANSI escape codes from Rich output
+ANSI_ESCAPE = re.compile(r"\x1b\[[0-9;]*m")
+
+
+def strip_ansi(text: str) -> str:
+    """Remove ANSI escape codes from text."""
+    return ANSI_ESCAPE.sub("", text)
+
 
 def auth_options():
     """Return common auth CLI options."""
@@ -299,22 +309,22 @@ class TestCLIOptions:
     def test_hours_option(self):
         """Test --hours option is available."""
         result = runner.invoke(app, ["users", "list", "--help"])
-        assert "--hours" in result.output
+        assert "--hours" in strip_ansi(result.output)
 
     def test_json_option(self):
         """Test --json option is available."""
         result = runner.invoke(app, ["users", "list", "--help"])
-        assert "--json" in result.output
+        assert "--json" in strip_ansi(result.output)
 
     def test_limit_option(self):
         """Test --limit option is available."""
         result = runner.invoke(app, ["users", "list", "--help"])
-        assert "--limit" in result.output
+        assert "--limit" in strip_ansi(result.output)
 
     def test_region_option(self):
         """Test --region option is available."""
         result = runner.invoke(app, ["users", "list", "--help"])
-        assert "--region" in result.output
+        assert "--region" in strip_ansi(result.output)
 
 
 class TestCLIEnums:
