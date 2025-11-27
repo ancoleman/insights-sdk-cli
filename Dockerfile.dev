@@ -1,8 +1,6 @@
 # syntax=docker/dockerfile:1.7
-# ═══════════════════════════════════════════════════════════════════════════════
 # Insights SDK CLI - Development Image
 # Includes test dependencies for running pytest
-# ═══════════════════════════════════════════════════════════════════════════════
 
 FROM python:3.12-slim AS builder
 
@@ -22,19 +20,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Copy dependency files
-COPY pyproject.toml ./
+# Copy all files needed for build
+COPY pyproject.toml README.md ./
+COPY src/ ./src/
 
 # Install all dependencies including dev
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --upgrade pip setuptools wheel && \
     pip install ".[dev]"
-
-# Copy and install source
-COPY src/ ./src/
-COPY README.md ./
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install ".[dev]" --no-deps
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Runtime stage
@@ -61,9 +54,7 @@ COPY --chown=insights:insights tests/ /app/tests/
 COPY --chown=insights:insights pyproject.toml /app/
 
 WORKDIR /app
-
 USER insights
 
-# Default: run tests
 ENTRYPOINT ["python", "-m", "pytest"]
 CMD ["tests/", "-v"]
