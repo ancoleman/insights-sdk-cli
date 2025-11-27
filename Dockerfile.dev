@@ -1,0 +1,69 @@
+# syntax=docker/dockerfile:1.7
+# ═══════════════════════════════════════════════════════════════════════════════
+# Insights SDK CLI - Development Image
+# Includes test dependencies for running pytest
+# ═══════════════════════════════════════════════════════════════════════════════
+
+FROM python:3.12-slim AS builder
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+WORKDIR /build
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create virtual environment
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Copy dependency files
+COPY pyproject.toml ./
+
+# Install all dependencies including dev
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --upgrade pip setuptools wheel && \
+    pip install ".[dev]"
+
+# Copy and install source
+COPY src/ ./src/
+COPY README.md ./
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install ".[dev]" --no-deps
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Runtime stage
+# ─────────────────────────────────────────────────────────────────────────────
+FROM python:3.12-slim AS runtime
+
+LABEL org.opencontainers.image.title="Insights SDK CLI (Development)" \
+      org.opencontainers.image.description="Development image with test dependencies"
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PATH="/opt/venv/bin:$PATH"
+
+# Create non-root user
+RUN groupadd --gid 1000 insights && \
+    useradd --uid 1000 --gid insights --shell /bin/bash --create-home insights
+
+# Copy virtual environment
+COPY --from=builder /opt/venv /opt/venv
+
+# Copy source and tests for development
+COPY --chown=insights:insights src/ /app/src/
+COPY --chown=insights:insights tests/ /app/tests/
+COPY --chown=insights:insights pyproject.toml /app/
+
+WORKDIR /app
+
+USER insights
+
+# Default: run tests
+ENTRYPOINT ["python", "-m", "pytest"]
+CMD ["tests/", "-v"]

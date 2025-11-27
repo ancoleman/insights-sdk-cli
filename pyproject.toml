@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "insights-sdk"
-version = "0.1.0"
+version = "0.2.0"
 description = "Python SDK for Palo Alto Networks Prisma Access Insights 3.0 API"
 readme = "README.md"
 license = {text = "MIT"}
@@ -38,6 +38,8 @@ dev = [
     "black>=25.9.0",
     "mypy>=1.18.0",
     "ruff>=0.14.0",
+    "build>=1.0.0",
+    "twine>=6.0.0",
 ]
 
 [project.scripts]

@@ -6,54 +6,51 @@ Query users, applications, sites, and security events from your Prisma Access de
 
 ## Installation
 
+### pip (recommended)
+
 ```bash
 pip install insights-sdk
 ```
 
-Or install from source:
+### Docker
+
+```bash
+docker build -t insights .
+docker run --rm insights --help
+```
+
+### From source
 
 ```bash
 git clone https://github.com/paloaltonetworks/insights-sdk.git
 cd insights-sdk
-pip install -e .
+make dev
 ```
+
+See [Installation Guide](docs/installation.md) for all options and CI/CD setup.
 
 ## Quick Start
 
 ### 1. Set Credentials
 
-Create a `.env` file or export environment variables:
-
 ```bash
-# .env
-SCM_CLIENT_ID=your-service-account@tsg.iam.panserviceaccount.com
-SCM_CLIENT_SECRET=your-secret
-SCM_TSG_ID=your-tsg-id
+export SCM_CLIENT_ID=your-service-account@tsg.iam.panserviceaccount.com
+export SCM_CLIENT_SECRET=your-secret
+export SCM_TSG_ID=your-tsg-id
 ```
 
 ### 2. CLI Usage
 
 ```bash
-# Test connection
-insights test
-
-# List agent users from last 24 hours
-insights users list agent
-
-# Get connected user count
-insights users count agent
-
-# List applications
-insights apps list
-
-# Get site traffic
-insights sites traffic
-
-# View all commands
-insights --help
+insights test                    # Test connection
+insights users list agent        # List users (last 24h)
+insights users count agent       # Connected user count
+insights apps list               # List applications
+insights sites traffic           # Site traffic
+insights --help                  # All commands
 ```
 
-### 3. Python SDK Usage
+### 3. Python SDK
 
 ```python
 from insights_sdk import InsightsClient
@@ -63,18 +60,17 @@ with InsightsClient(
     client_secret="your-secret",
     tsg_id="your-tsg-id",
 ) as client:
-    # Query users
     users = client.get_agent_users(hours=24)
     print(f"Found {len(users.get('data', []))} users")
-
-    # Query applications
-    apps = client.get_applications(hours=24)
 ```
 
 ## Documentation
 
-- **[CLI Reference](docs/cli-reference.md)** - Complete CLI command reference with examples
-- **[SDK Guide](docs/sdk-guide.md)** - Python SDK usage, filtering, async support, and best practices
+| Guide | Description |
+|-------|-------------|
+| [Installation](docs/installation.md) | pip, Docker, source, and CI/CD setup |
+| [CLI Reference](docs/cli-reference.md) | Complete command reference |
+| [SDK Guide](docs/sdk-guide.md) | Python SDK usage and filtering |
 
 ## Command Groups
 
@@ -82,30 +78,20 @@ with InsightsClient(
 |-------|-------------|
 | `insights users` | User queries (list, count, sessions, devices) |
 | `insights apps` | Application queries |
-| `insights accelerated` | Accelerated app metrics |
 | `insights sites` | Site queries |
 | `insights security` | PAB security events |
 | `insights monitoring` | Monitored user metrics |
-
-## Key Features
-
-- **84+ API endpoints** covered through CLI and SDK
-- **Sync and async** Python clients
-- **Flexible filtering** with 15+ operators
-- **Multiple regions** (Americas, Europe, Asia, APAC)
-- **Auto token refresh** - handles OAuth2 automatically
+| `insights accelerated` | Accelerated app metrics |
 
 ## Development
 
 ```bash
-# Install dev dependencies
-pip install -e ".[dev]"
-
-# Run tests
-pytest tests/ -v
-
-# Format and lint
-black src/ && ruff check src/
+make help       # Show all targets
+make dev        # Install with dev deps
+make test       # Run tests
+make lint       # Run linters
+make format     # Format code
+make build      # Build Docker image
 ```
 
 ## License

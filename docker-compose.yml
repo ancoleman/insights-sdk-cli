@@ -1,0 +1,29 @@
+# Insights CLI
+#
+# Build:  docker compose build
+# Run:    docker compose run --rm insights users list agent
+# Test:   docker compose run --rm test
+
+services:
+  insights:
+    build: .
+    image: insights:latest
+    environment:
+      - SCM_CLIENT_ID=${SCM_CLIENT_ID:-}
+      - SCM_CLIENT_SECRET=${SCM_CLIENT_SECRET:-}
+      - SCM_TSG_ID=${SCM_TSG_ID:-}
+      - INSIGHTS_REGION=${INSIGHTS_REGION:-americas}
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: insights:dev
+    volumes:
+      - ./src:/app/src:ro
+      - ./tests:/app/tests:ro
