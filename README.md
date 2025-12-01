@@ -22,7 +22,7 @@ docker run --rm insights --help
 ### From source
 
 ```bash
-git clone https://github.com/paloaltonetworks/insights-sdk.git
+git clone https://github.com/ancoleman/insights-sdk.git
 cd insights-sdk
 make dev
 ```
