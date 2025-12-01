@@ -6,7 +6,7 @@ Query users, applications, sites, and security events from your Prisma Access de
 
 ## Installation
 
-### pip (recommended)
+### pip (currently not published to pypi, use docker, or run from source)
 
 ```bash
 pip install insights-sdk
