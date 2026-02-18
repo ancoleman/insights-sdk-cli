@@ -6,10 +6,10 @@ Query users, applications, sites, and security events from your Prisma Access de
 
 ## Installation
 
-### pip (currently not published to pypi, use docker, or run from source)
+### pip
 
 ```bash
-pip install insights-sdk
+pip install pan-insights-sdk
 ```
 
 ### Docker
@@ -22,8 +22,8 @@ docker run --rm insights --help
 ### From source
 
 ```bash
-git clone https://github.com/ancoleman/insights-sdk.git
-cd insights-sdk
+git clone https://github.com/ancoleman/insights-sdk-cli.git
+cd insights-sdk-cli
 make dev
 ```
 
