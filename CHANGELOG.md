@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2026-04-07
+
+### Added
+
+- **`get_eb_users()`** — Enterprise Browser user list
+- **`get_other_users()`** — Other/host user list (249 network entities on test tenant)
+- **`get_user_sessions(user_type)`** — Generic session list for any user type (agent, agentless, branch, other)
+
+These close the coverage gap for Enterprise Browser and agentless/other user types.
+Mobile users are covered under the agent type — no separate API category exists.
+Monitored user list/count endpoints remain unavailable (known API limitation, returns DATA10003).
+
 ## [0.3.0] - 2026-04-07
 
 ### Added
@@ -175,6 +187,7 @@ SDK now has full feature parity with CLI (49 public methods, up from 28).
 - Agent-type endpoints require `platform_type` filter (added automatically by CLI)
 - Histogram endpoints require histogram configuration (added automatically by CLI)
 
+[0.3.1]: https://github.com/ancoleman/insights-sdk-cli/releases/tag/v0.3.1
 [0.3.0]: https://github.com/ancoleman/insights-sdk-cli/releases/tag/v0.3.0
 [0.2.3]: https://github.com/ancoleman/insights-sdk-cli/releases/tag/v0.2.3
 [0.2.2]: https://github.com/ancoleman/insights-sdk-cli/releases/tag/v0.2.2

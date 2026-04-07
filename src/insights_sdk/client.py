@@ -212,6 +212,24 @@ class InsightsClient:
         body = self._build_query_body(hours, filters)
         return self._post("query/users/agentless/users", body)
 
+    def get_eb_users(
+        self,
+        hours: int = 24,
+        filters: Optional[list[FilterRule]] = None,
+    ) -> dict[str, Any]:
+        """Get list of Enterprise Browser users."""
+        body = self._build_query_body(hours, filters)
+        return self._post("query/users/eb/user_list", body)
+
+    def get_other_users(
+        self,
+        hours: int = 24,
+        filters: Optional[list[FilterRule]] = None,
+    ) -> dict[str, Any]:
+        """Get list of other/host users."""
+        body = self._build_query_body(hours, filters)
+        return self._post("query/users/other/user_list", body)
+
     def get_all_users(
         self,
         hours: int = 24,
@@ -283,6 +301,24 @@ class InsightsClient:
         """
         body = self._build_query_body(hours, filters)
         return self._post("query/users/agent/session_list", body)
+
+    def get_user_sessions(
+        self,
+        user_type: str = "other",
+        hours: int = 24,
+        filters: Optional[list[FilterRule]] = None,
+    ) -> dict[str, Any]:
+        """Get user sessions for any user type.
+
+        Args:
+            user_type: One of 'agent', 'agentless', 'branch', 'other'.
+                       Agent type requires a ``username`` filter.
+                       EB type is not supported for sessions.
+            hours: Number of hours to look back
+            filters: Additional filter rules
+        """
+        body = self._build_query_body(hours, filters)
+        return self._post(f"query/users/{user_type}/session_list", body)
 
     def get_risky_user_count(
         self,
