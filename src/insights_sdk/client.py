@@ -248,7 +248,9 @@ class InsightsClient:
         """Get count of connected users.
 
         Args:
-            user_type: Type of users (agent, branch, agentless, eb, other)
+            user_type: Type of users. Valid values are: agent, branch, agentless, eb.
+                       Note: "all" and "other" are not valid for this endpoint and
+                       will result in a 400 error from the API.
             hours: Number of hours to look back
             filters: Additional filter rules
         """
@@ -413,7 +415,10 @@ class InsightsClient:
         hours: int = 24,
         filters: Optional[list[FilterRule]] = None,
     ) -> dict[str, Any]:
-        """Get count of monitored users."""
+        """Get count of monitored users.
+
+        Note: Known API limitation — may return DATA10003 on some tenants.
+        """
         body = self._build_query_body(hours, filters)
         return self._post("query/user/monitored/user_count", body)
 
@@ -478,7 +483,10 @@ class InsightsClient:
         hours: int = 24,
         filters: Optional[list[FilterRule]] = None,
     ) -> dict[str, Any]:
-        """Get list of accelerated applications."""
+        """Get list of accelerated applications.
+
+        Note: Requires accelerated apps feature enabled on the tenant. Returns DATA10003 if not available.
+        """
         body = self._build_query_body(hours, filters)
         return self._post("query/accelerated_applications/accelerated_application_list", body)
 
@@ -487,7 +495,10 @@ class InsightsClient:
         hours: int = 24,
         filters: Optional[list[FilterRule]] = None,
     ) -> dict[str, Any]:
-        """Get accelerated application performance boost metrics."""
+        """Get accelerated application performance boost metrics.
+
+        Note: Requires accelerated apps feature enabled on the tenant. Returns DATA10003 if not available.
+        """
         body = self._build_query_body(hours, filters)
         return self._post("query/accelerated_applications/performance_boost", body)
 
@@ -532,7 +543,10 @@ class InsightsClient:
         hours: int = 24,
         filters: Optional[list[FilterRule]] = None,
     ) -> dict[str, Any]:
-        """Get count of accelerated applications."""
+        """Get count of accelerated applications.
+
+        Note: Requires accelerated apps feature enabled on the tenant. Returns DATA10003 if not available.
+        """
         body = self._build_query_body(hours, filters)
         return self._post("query/accelerated_applications/applications_count", body)
 
@@ -541,7 +555,10 @@ class InsightsClient:
         hours: int = 24,
         filters: Optional[list[FilterRule]] = None,
     ) -> dict[str, Any]:
-        """Get count of users on accelerated applications."""
+        """Get count of users on accelerated applications.
+
+        Note: Requires accelerated apps feature enabled on the tenant. Returns DATA10003 if not available.
+        """
         body = self._build_query_body(hours, filters)
         return self._post("query/accelerated_applications/users_count", body)
 
@@ -552,6 +569,8 @@ class InsightsClient:
         per_app: bool = False,
     ) -> dict[str, Any]:
         """Get data transfer metrics for accelerated apps.
+
+        Note: Requires accelerated apps feature enabled on the tenant. Returns DATA10003 if not available.
 
         Args:
             hours: Number of hours to look back
@@ -569,6 +588,8 @@ class InsightsClient:
         per_app: bool = False,
     ) -> dict[str, Any]:
         """Get response time improvement metrics for accelerated apps.
+
+        Note: Requires accelerated apps feature enabled on the tenant. Returns DATA10003 if not available.
 
         Args:
             hours: Number of hours to look back
@@ -590,6 +611,8 @@ class InsightsClient:
         interval: int = 30,
     ) -> dict[str, Any]:
         """Get histogram for accelerated app metrics.
+
+        Note: Requires accelerated apps feature enabled on the tenant. Returns DATA10003 if not available.
 
         Args:
             metric: One of 'throughput', 'packet-loss', 'rtt', 'boost'
@@ -659,7 +682,10 @@ class InsightsClient:
         hours: int = 24,
         filters: Optional[list[FilterRule]] = None,
     ) -> dict[str, Any]:
-        """Get site session count."""
+        """Get site session count.
+
+        Note: Known API limitation — may return GCP10002 backend error on some tenants.
+        """
         body = self._build_query_body(hours, filters)
         return self._post("query/sites/session_count", body)
 
@@ -999,7 +1025,15 @@ class AsyncInsightsClient:
         hours: int = 24,
         filters: Optional[list[FilterRule]] = None,
     ) -> dict[str, Any]:
-        """Get count of connected users."""
+        """Get count of connected users.
+
+        Args:
+            user_type: Type of users. Valid values are: agent, branch, agentless, eb.
+                       Note: "all" and "other" are not valid for this endpoint and
+                       will result in a 400 error from the API.
+            hours: Number of hours to look back
+            filters: Additional filter rules
+        """
         body = self._build_query_body(hours, filters)
         return await self._post(f"query/users/{user_type}/connected_user_count", body)
 
