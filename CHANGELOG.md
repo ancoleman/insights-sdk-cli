@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2] - 2026-04-07
+
+### Fixed
+
+- **`get_agent_sessions()`** — was hitting `query/users/other/session_list` instead of `query/users/agent/session_list`, returning wrong user type's sessions
+- **`get_risky_user_count()`** — was hitting `query/agent/risky_user_count` (missing `users/` prefix) for agent type, causing 400 errors
+- **`get_user_count_histogram()`** — was missing required `histogram` config in request body and using wrong agent endpoint (`user_count_histogram` instead of `connected_user_count_histogram`), causing 400 errors
+- **`get_site_bandwidth()`** — was missing required `histogram` config in request body, causing 400 errors for all SDK callers (CLI worked because it added histogram config directly)
+
+### Changed
+
+- `get_user_count_histogram()` and `get_site_bandwidth()` now accept an optional `interval` parameter (default: 30 minutes) for histogram granularity
+
 ## [0.2.0] - 2025-11-26
 
 ### Added
@@ -120,5 +133,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Agent-type endpoints require `platform_type` filter (added automatically by CLI)
 - Histogram endpoints require histogram configuration (added automatically by CLI)
 
-[0.2.0]: https://github.com/paloaltonetworks/insights-sdk/releases/tag/v0.2.0
-[0.1.0]: https://github.com/paloaltonetworks/insights-sdk/releases/tag/v0.1.0
+[0.2.2]: https://github.com/ancoleman/insights-sdk-cli/releases/tag/v0.2.2
+[0.2.0]: https://github.com/ancoleman/insights-sdk-cli/releases/tag/v0.2.0
+[0.1.0]: https://github.com/ancoleman/insights-sdk-cli/releases/tag/v0.1.0

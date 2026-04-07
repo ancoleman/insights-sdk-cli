@@ -247,7 +247,7 @@ class TestInsightsClientUserQueries:
         respx.post(TEST_AUTH_URL).mock(
             return_value=httpx.Response(200, json=sample_auth_response)
         )
-        respx.post(url__regex=r".*/query/users/agent/user_count_histogram").mock(
+        respx.post(url__regex=r".*/query/users/agent/connected_user_count_histogram").mock(
             return_value=httpx.Response(200, json={"data": [{"timestamp": "2025-01-01", "count": 10}]})
         )
 
@@ -273,7 +273,7 @@ class TestInsightsClientUserQueries:
         respx.post(TEST_AUTH_URL).mock(
             return_value=httpx.Response(200, json=sample_auth_response)
         )
-        respx.post(url__regex=r".*/query/users/other/session_list").mock(
+        respx.post(url__regex=r".*/query/users/agent/session_list").mock(
             return_value=httpx.Response(200, json={"data": [{"session_id": "123"}]})
         )
 
@@ -286,7 +286,7 @@ class TestInsightsClientUserQueries:
         respx.post(TEST_AUTH_URL).mock(
             return_value=httpx.Response(200, json=sample_auth_response)
         )
-        respx.post(url__regex=r".*/query/agent/risky_user_count").mock(
+        respx.post(url__regex=r".*/query/users/agent/risky_user_count").mock(
             return_value=httpx.Response(200, json={"data": [{"count": 5}]})
         )
 

@@ -242,9 +242,25 @@ class InsightsClient:
         user_type: str = "agent",
         hours: int = 24,
         filters: Optional[list[FilterRule]] = None,
+        interval: int = 30,
     ) -> dict[str, Any]:
-        """Get user count over time as histogram."""
+        """Get user count over time as histogram.
+
+        Args:
+            user_type: Type of users (agent, branch, agentless, other)
+            hours: Number of hours to look back
+            filters: Additional filter rules
+            interval: Histogram interval in minutes (default: 30)
+        """
         body = self._build_query_body(hours, filters)
+        body["histogram"] = {
+            "enableEmptyInterval": True,
+            "property": "event_time",
+            "range": "minute",
+            "value": interval,
+        }
+        if user_type == "agent":
+            return self._post("query/users/agent/connected_user_count_histogram", body)
         return self._post(f"query/users/{user_type}/user_count_histogram", body)
 
     def get_agent_devices(
@@ -261,9 +277,12 @@ class InsightsClient:
         hours: int = 24,
         filters: Optional[list[FilterRule]] = None,
     ) -> dict[str, Any]:
-        """Get list of user sessions."""
+        """Get list of agent user sessions.
+
+        Note: Requires a ``username`` filter for agent sessions.
+        """
         body = self._build_query_body(hours, filters)
-        return self._post("query/users/other/session_list", body)
+        return self._post("query/users/agent/session_list", body)
 
     def get_risky_user_count(
         self,
@@ -273,6 +292,8 @@ class InsightsClient:
     ) -> dict[str, Any]:
         """Get count of risky users."""
         body = self._build_query_body(hours, filters)
+        if user_type == "agent":
+            return self._post("query/users/agent/risky_user_count", body)
         return self._post(f"query/{user_type}/risky_user_count", body)
 
     def get_monitored_user_count(
@@ -382,9 +403,22 @@ class InsightsClient:
         self,
         hours: int = 24,
         filters: Optional[list[FilterRule]] = None,
+        interval: int = 30,
     ) -> dict[str, Any]:
-        """Get site bandwidth consumption histogram."""
+        """Get site bandwidth consumption histogram.
+
+        Args:
+            hours: Number of hours to look back
+            filters: Additional filter rules
+            interval: Histogram interval in minutes (default: 30)
+        """
         body = self._build_query_body(hours, filters)
+        body["histogram"] = {
+            "enableEmptyInterval": True,
+            "property": "event_time",
+            "range": "minute",
+            "value": interval,
+        }
         return self._post("query/sites/bandwidth_consumption_histogram", body)
 
     def get_site_session_count(
