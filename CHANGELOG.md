@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.3] - 2026-04-07
+
+### Fixed
+
+- **`get_pab_access_events_blocked()`** — was hitting `query/pab/access_events_blocked` instead of `query/applications/pab/access_events_blocked`, causing 400 errors
+- **CLI `security access --blocked`** — same incorrect endpoint path as the SDK method
+
 ## [0.2.2] - 2026-04-07
 
 ### Fixed
@@ -133,6 +140,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Agent-type endpoints require `platform_type` filter (added automatically by CLI)
 - Histogram endpoints require histogram configuration (added automatically by CLI)
 
+[0.2.3]: https://github.com/ancoleman/insights-sdk-cli/releases/tag/v0.2.3
 [0.2.2]: https://github.com/ancoleman/insights-sdk-cli/releases/tag/v0.2.2
 [0.2.0]: https://github.com/ancoleman/insights-sdk-cli/releases/tag/v0.2.0
 [0.1.0]: https://github.com/ancoleman/insights-sdk-cli/releases/tag/v0.1.0

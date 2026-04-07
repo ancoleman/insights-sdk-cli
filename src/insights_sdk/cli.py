@@ -1058,7 +1058,7 @@ def security_access(
     elif breakdown and histogram:
         endpoint = "query/pab/access_events_breakdown_histogram"
     elif blocked:
-        endpoint = "query/pab/access_events_blocked"
+        endpoint = "query/applications/pab/access_events_blocked"
     elif breakdown:
         endpoint = "query/applications/pab/access_events_breakdown"
     elif histogram:

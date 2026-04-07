@@ -538,7 +538,7 @@ class TestInsightsClientPABQueries:
         respx.post(TEST_AUTH_URL).mock(
             return_value=httpx.Response(200, json=sample_auth_response)
         )
-        respx.post(url__regex=r".*/query/pab/access_events_blocked").mock(
+        respx.post(url__regex=r".*/query/applications/pab/access_events_blocked").mock(
             return_value=httpx.Response(200, json={"data": [{"event_id": "2", "blocked": True}]})
         )
 

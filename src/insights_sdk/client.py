@@ -459,7 +459,7 @@ class InsightsClient:
     ) -> dict[str, Any]:
         """Get blocked PAB access events."""
         body = self._build_query_body(hours, filters)
-        return self._post("query/pab/access_events_blocked", body)
+        return self._post("query/applications/pab/access_events_blocked", body)
 
     def get_pab_data_events(
         self,
