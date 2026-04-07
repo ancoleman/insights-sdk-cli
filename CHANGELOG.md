@@ -5,6 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-04-07
+
+### Added
+
+- **User Methods**
+  - `get_active_user_count()` — active user count (agentless, branch, eb, other)
+  - `get_active_users()` — active user list
+  - `get_entity_count()` — connected entity count (agent, branch, other)
+  - `get_client_version_distribution()` — agent version distribution
+  - `get_unique_device_connections()` — unique device connections list
+  - `get_current_user_count()` — current connected agent user count
+  - `get_device_count_histogram()` — agent device count over time
+
+- **Application Methods**
+  - `get_app_bandwidth()` — per-app bandwidth histogram with app name parameter
+  - `get_app_data_transfer_by_destination()` — data transfer grouped by destination
+
+- **Accelerated Application Methods**
+  - `get_accelerated_app_count()` — accelerated application count
+  - `get_accelerated_user_count()` — accelerated app user count
+  - `get_accelerated_data_transfer()` — total or per-app data transfer
+  - `get_accelerated_response_time()` — response time improvement metrics
+  - `get_accelerated_histogram()` — histogram by metric (throughput, packet-loss, rtt, boost)
+
+- **Monitoring Methods**
+  - `get_monitored_device_count()` — monitored device count
+  - `get_monitored_device_count_histogram()` — monitored device count over time
+
+- **Security (PAB) Methods**
+  - `get_pab_access_events_breakdown()` — access events breakdown
+  - `get_pab_data_events_blocked()` — blocked data events
+  - `get_pab_data_events_breakdown()` — data events breakdown
+
+SDK now has full feature parity with CLI (49 public methods, up from 28).
+
 ## [0.2.3] - 2026-04-07
 
 ### Fixed
@@ -140,6 +175,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Agent-type endpoints require `platform_type` filter (added automatically by CLI)
 - Histogram endpoints require histogram configuration (added automatically by CLI)
 
+[0.3.0]: https://github.com/ancoleman/insights-sdk-cli/releases/tag/v0.3.0
 [0.2.3]: https://github.com/ancoleman/insights-sdk-cli/releases/tag/v0.2.3
 [0.2.2]: https://github.com/ancoleman/insights-sdk-cli/releases/tag/v0.2.2
 [0.2.0]: https://github.com/ancoleman/insights-sdk-cli/releases/tag/v0.2.0

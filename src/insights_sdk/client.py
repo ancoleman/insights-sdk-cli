@@ -296,6 +296,82 @@ class InsightsClient:
             return self._post("query/users/agent/risky_user_count", body)
         return self._post(f"query/{user_type}/risky_user_count", body)
 
+    def get_active_user_count(
+        self,
+        user_type: str = "agentless",
+        hours: int = 24,
+        filters: Optional[list[FilterRule]] = None,
+    ) -> dict[str, Any]:
+        """Get count of active users (agentless, branch, eb, other)."""
+        body = self._build_query_body(hours, filters)
+        return self._post(f"query/users/{user_type}/active_user_count", body)
+
+    def get_active_users(
+        self,
+        user_type: str = "agentless",
+        hours: int = 24,
+        filters: Optional[list[FilterRule]] = None,
+    ) -> dict[str, Any]:
+        """Get list of active users (agentless, branch, eb, other)."""
+        body = self._build_query_body(hours, filters)
+        return self._post(f"query/users/{user_type}/active_user_list", body)
+
+    def get_entity_count(
+        self,
+        user_type: str = "agent",
+        hours: int = 24,
+        filters: Optional[list[FilterRule]] = None,
+    ) -> dict[str, Any]:
+        """Get connected entity count (agent, branch, other)."""
+        body = self._build_query_body(hours, filters)
+        return self._post(f"query/users/{user_type}/connected_entity_count", body)
+
+    def get_client_version_distribution(
+        self,
+        hours: int = 24,
+        filters: Optional[list[FilterRule]] = None,
+    ) -> dict[str, Any]:
+        """Get agent client version distribution.
+
+        Note: Requires ``client_agent_type`` and ``platform_type`` filters.
+        """
+        body = self._build_query_body(hours, filters)
+        return self._post("query/users/agent/client_version_distribution", body)
+
+    def get_unique_device_connections(
+        self,
+        hours: int = 24,
+        filters: Optional[list[FilterRule]] = None,
+    ) -> dict[str, Any]:
+        """Get unique device connections list."""
+        body = self._build_query_body(hours, filters)
+        return self._post("query/users/agent/unique_device_connections_list", body)
+
+    def get_current_user_count(
+        self,
+        hours: int = 24,
+        filters: Optional[list[FilterRule]] = None,
+    ) -> dict[str, Any]:
+        """Get current connected user count (agent only, requires platform_type filter)."""
+        body = self._build_query_body(hours, filters)
+        return self._post("query/users/agent/current_connected_user_count", body)
+
+    def get_device_count_histogram(
+        self,
+        hours: int = 24,
+        filters: Optional[list[FilterRule]] = None,
+        interval: int = 30,
+    ) -> dict[str, Any]:
+        """Get agent device count histogram over time."""
+        body = self._build_query_body(hours, filters)
+        body["histogram"] = {
+            "enableEmptyInterval": True,
+            "property": "event_time",
+            "range": "minute",
+            "value": interval,
+        }
+        return self._post("query/users/agent/connected_user_device_count_histogram", body)
+
     def get_monitored_user_count(
         self,
         hours: int = 24,
@@ -379,6 +455,127 @@ class InsightsClient:
         body = self._build_query_body(hours, filters)
         return self._post("query/accelerated_applications/performance_boost", body)
 
+    def get_app_bandwidth(
+        self,
+        app_name: str,
+        hours: int = 24,
+        filters: Optional[list[FilterRule]] = None,
+        interval: int = 30,
+    ) -> dict[str, Any]:
+        """Get bandwidth histogram for a specific application.
+
+        Args:
+            app_name: Application name (e.g., 'Zoom', 'Slack')
+            hours: Number of hours to look back
+            filters: Additional filter rules
+            interval: Histogram interval in minutes (default: 30)
+        """
+        all_filters = [FilterRule(property="app", operator=Operator.IN, values=[app_name])]
+        if filters:
+            all_filters.extend(filters)
+        body = self._build_query_body(hours, all_filters)
+        body["histogram"] = {
+            "enableEmptyInterval": True,
+            "property": "event_time",
+            "range": "minute",
+            "value": interval,
+        }
+        return self._post("query/app_details_bw_info_histogram", body)
+
+    def get_app_data_transfer_by_destination(
+        self,
+        hours: int = 24,
+        filters: Optional[list[FilterRule]] = None,
+    ) -> dict[str, Any]:
+        """Get total data transfer grouped by destination."""
+        body = self._build_query_body(hours, filters)
+        return self._post("query/applications/internal/total_data_transfer_by_destination", body)
+
+    def get_accelerated_app_count(
+        self,
+        hours: int = 24,
+        filters: Optional[list[FilterRule]] = None,
+    ) -> dict[str, Any]:
+        """Get count of accelerated applications."""
+        body = self._build_query_body(hours, filters)
+        return self._post("query/accelerated_applications/applications_count", body)
+
+    def get_accelerated_user_count(
+        self,
+        hours: int = 24,
+        filters: Optional[list[FilterRule]] = None,
+    ) -> dict[str, Any]:
+        """Get count of users on accelerated applications."""
+        body = self._build_query_body(hours, filters)
+        return self._post("query/accelerated_applications/users_count", body)
+
+    def get_accelerated_data_transfer(
+        self,
+        hours: int = 24,
+        filters: Optional[list[FilterRule]] = None,
+        per_app: bool = False,
+    ) -> dict[str, Any]:
+        """Get data transfer metrics for accelerated apps.
+
+        Args:
+            hours: Number of hours to look back
+            filters: Additional filter rules
+            per_app: If True, return throughput per app instead of total
+        """
+        body = self._build_query_body(hours, filters)
+        endpoint = "query/accelerated_applications/data_transfer_throughput_per_app" if per_app else "query/accelerated_applications/total_data_transfer"
+        return self._post(endpoint, body)
+
+    def get_accelerated_response_time(
+        self,
+        hours: int = 24,
+        filters: Optional[list[FilterRule]] = None,
+        per_app: bool = False,
+    ) -> dict[str, Any]:
+        """Get response time improvement metrics for accelerated apps.
+
+        Args:
+            hours: Number of hours to look back
+            filters: Additional filter rules
+            per_app: If True, return per-app breakdown
+        """
+        body = self._build_query_body(hours, filters)
+        if per_app:
+            endpoint = "query/applications/accelerated_applications/response_time_before_and_after_improvement_per_app"
+        else:
+            endpoint = "query/applications/accelerated_applications/response_time_before_and_after_improvement"
+        return self._post(endpoint, body)
+
+    def get_accelerated_histogram(
+        self,
+        metric: str = "throughput",
+        hours: int = 24,
+        filters: Optional[list[FilterRule]] = None,
+        interval: int = 30,
+    ) -> dict[str, Any]:
+        """Get histogram for accelerated app metrics.
+
+        Args:
+            metric: One of 'throughput', 'packet-loss', 'rtt', 'boost'
+            hours: Number of hours to look back
+            filters: Additional filter rules
+            interval: Histogram interval in minutes (default: 30)
+        """
+        endpoint_map = {
+            "throughput": "query/accelerated_applications/throughput_per_app_histogram",
+            "packet-loss": "query/accelerated_applications/packet_loss_per_app_histogram",
+            "rtt": "query/accelerated_applications/rtt_variance_histogram",
+            "boost": "query/accelerated_applications/accelerated_applications/throughput_before_after_boost_histogram",
+        }
+        body = self._build_query_body(hours, filters)
+        body["histogram"] = {
+            "enableEmptyInterval": True,
+            "property": "event_time",
+            "range": "minute",
+            "value": interval,
+        }
+        return self._post(endpoint_map[metric], body)
+
     # ========== Site Queries ==========
 
     def get_site_count(
@@ -452,6 +649,40 @@ class InsightsClient:
         body = self._build_query_body(hours, filters)
         return self._post("query/applications/pab/access_events", body)
 
+    def get_monitored_device_count(
+        self,
+        hours: int = 24,
+        filters: Optional[list[FilterRule]] = None,
+    ) -> dict[str, Any]:
+        """Get count of monitored devices."""
+        body = self._build_query_body(hours, filters)
+        return self._post("query/users/monitored/device_count", body)
+
+    def get_monitored_device_count_histogram(
+        self,
+        hours: int = 24,
+        filters: Optional[list[FilterRule]] = None,
+        interval: int = 30,
+    ) -> dict[str, Any]:
+        """Get monitored device count histogram over time."""
+        body = self._build_query_body(hours, filters)
+        body["histogram"] = {
+            "enableEmptyInterval": True,
+            "property": "event_time",
+            "range": "minute",
+            "value": interval,
+        }
+        return self._post("query/users/monitored/device_count_histogram", body)
+
+    def get_pab_access_events_breakdown(
+        self,
+        hours: int = 24,
+        filters: Optional[list[FilterRule]] = None,
+    ) -> dict[str, Any]:
+        """Get PAB access events breakdown."""
+        body = self._build_query_body(hours, filters)
+        return self._post("query/applications/pab/access_events_breakdown", body)
+
     def get_pab_access_events_blocked(
         self,
         hours: int = 24,
@@ -469,6 +700,24 @@ class InsightsClient:
         """Get PAB data events."""
         body = self._build_query_body(hours, filters)
         return self._post("query/applications/pab/data_events", body)
+
+    def get_pab_data_events_blocked(
+        self,
+        hours: int = 24,
+        filters: Optional[list[FilterRule]] = None,
+    ) -> dict[str, Any]:
+        """Get blocked PAB data events."""
+        body = self._build_query_body(hours, filters)
+        return self._post("query/pab/data_events_blocked", body)
+
+    def get_pab_data_events_breakdown(
+        self,
+        hours: int = 24,
+        filters: Optional[list[FilterRule]] = None,
+    ) -> dict[str, Any]:
+        """Get PAB data events breakdown."""
+        body = self._build_query_body(hours, filters)
+        return self._post("query/pab/data_events_breakdown", body)
 
     # ========== Export Queries ==========
 
