@@ -55,8 +55,13 @@ from insights_sdk import Region
 
 Region.AMERICAS  # Americas (default)
 Region.EUROPE    # Europe
-Region.ASIA      # Asia
-Region.APAC      # Asia-Pacific
+Region.AUSTRALIA # au
+Region.CANADA    # ca
+Region.GERMANY   # de
+Region.INDIA     # in
+Region.JAPAN     # jp
+Region.SINGAPORE # sg
+Region.UK        # uk
 ```
 
 ### Context Manager (Recommended)

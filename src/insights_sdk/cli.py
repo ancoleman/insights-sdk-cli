@@ -132,7 +132,7 @@ def tsg_id_option() -> Optional[str]:
     return typer.Option(None, "--tsg-id", "-t", help="Tenant Service Group ID", envvar="SCM_TSG_ID")
 
 def region_option() -> str:
-    return typer.Option("americas", "--region", "-r", help="API region (americas, europe, asia, apac)")
+    return typer.Option("americas", "--region", "-r", help="API region (americas, au, ca, de, europe, in, jp, sg, uk)")
 
 def hours_option() -> int:
     return typer.Option(24, "--hours", "-H", help="Hours to look back")

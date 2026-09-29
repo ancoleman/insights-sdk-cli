@@ -53,7 +53,7 @@ def get_something(self, hours: int = 24, filters: Optional[list[FilterRule]] = N
 - **Agent endpoints REQUIRE `platform_type` filter** - CLI adds automatically
 - **Histogram endpoints REQUIRE `histogram` config object** - CLI adds automatically
 - **`users sessions agent` REQUIRES `username` filter**
-- **Region header required**: `X-PANW-Region: americas|europe|asia|apac`
+- **Region header required**: `X-PANW-Region: americas|au|ca|de|europe|in|jp|sg|uk` (must match the tenant's region)
 
 ## Known API Limitations
 

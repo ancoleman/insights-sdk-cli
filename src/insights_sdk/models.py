@@ -13,11 +13,16 @@ from pydantic import BaseModel, Field
 
 
 class Region(str, Enum):
-    """Supported regions for Insights API."""
+    """Supported X-PANW-Region values (https://pan.dev/sase/docs/api-call/#x-panw-region-values)."""
     AMERICAS = "americas"
+    AUSTRALIA = "au"
+    CANADA = "ca"
+    GERMANY = "de"
     EUROPE = "europe"
-    ASIA = "asia"
-    APAC = "apac"
+    INDIA = "in"
+    JAPAN = "jp"
+    SINGAPORE = "sg"
+    UK = "uk"
 
 
 class Operator(str, Enum):
