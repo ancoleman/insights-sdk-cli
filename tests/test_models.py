@@ -28,15 +28,26 @@ class TestRegionEnum:
         """Test that all regions have correct string values."""
         assert Region.AMERICAS.value == "americas"
         assert Region.EUROPE.value == "europe"
-        assert Region.ASIA.value == "asia"
-        assert Region.APAC.value == "apac"
+        assert Region.AUSTRALIA.value == "au"
+        assert Region.CANADA.value == "ca"
+        assert Region.GERMANY.value == "de"
+        assert Region.INDIA.value == "in"
+        assert Region.JAPAN.value == "jp"
+        assert Region.SINGAPORE.value == "sg"
+        assert Region.UK.value == "uk"
 
     def test_region_from_string(self):
         """Test creating Region from string value."""
         assert Region("americas") == Region.AMERICAS
         assert Region("europe") == Region.EUROPE
-        assert Region("asia") == Region.ASIA
-        assert Region("apac") == Region.APAC
+        assert Region("sg") == Region.SINGAPORE
+        assert Region("uk") == Region.UK
+
+    def test_undocumented_regions_rejected(self):
+        """asia/apac are not valid X-PANW-Region values and are denied by the gateway."""
+        for value in ("asia", "apac"):
+            with pytest.raises(ValueError):
+                Region(value)
 
     def test_region_is_string_subclass(self):
         """Test that Region values can be used as strings."""
